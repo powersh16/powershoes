@@ -7,12 +7,10 @@ var session = require('express-session');
 var expressValidator = require('express-validator');
 
 //connect to DB
-mongoose.connect(config.database);
-var db= mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error: '));
-db.once('open', function(){
-    console.log('Connected to MongoDB');
-
+mongoose.connect(config.database, { useNewUrlParser: true , useUnifiedTopology: true  },function(err){
+  if(err){
+      console.log(err)
+  }else{console.log("You are connected to mongodb")}
 });
 // Init app
 var app=express();
@@ -23,6 +21,8 @@ app.set('view engine', 'ejs');
 
 // Set public folder
 app.use(express.static(path.join(__dirname, 'public')));
+// Set global errors variable
+app.locals.errors = null;
 
 // Body Parser middleware
 //
