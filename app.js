@@ -140,6 +140,7 @@ app.use('/products', products);
 app.use('/cart', cart);
 app.use('/users', users);
 app.use('/', pages);
+app.use('/contact',require('./routes/contact.js'));
 
 // Start the server
 var port = 3000;

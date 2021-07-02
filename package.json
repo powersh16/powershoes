@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+
   },
   "author": "",
   "license": "ISC",
@@ -22,8 +24,12 @@
     "fs-extra": "^4.0.1",
     "mkdirp": "^1.0.4",
     "mongoose": "^5.12.11",
+    "nodemailer": "^6.6.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "resize-img": "^1.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

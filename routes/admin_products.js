@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mkdirp = require('mkdirp');
+const path2=require("path");
 var fs = require('fs-extra');
 var resizeImg = require('resize-img');
 var auth = require('../config/auth');
@@ -11,6 +12,7 @@ var Product = require('../models/product');
 
 // Get Category model
 var Category = require('../models/category');
+const { dirname } = require('path');
 
 /*
  * GET products index
@@ -55,13 +57,15 @@ router.get('/add-product', isAdmin, function (req, res) {
  * POST add product
  */
 router.post('/add-product', function (req, res) {
-
-    var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+    console.log(req.files)
+    var imageFile=req.files!==null?req.files.image.name:"";
+ 
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('desc', 'Description must have a value.').notEmpty();
     req.checkBody('price', 'Price must have a value.').isDecimal();
     req.checkBody('image', 'You must upload an image').isImage(imageFile);
+    console.log("image: "+imageFile);
 
     var title = req.body.title;
     var slug = title.replace(/\s+/g, '-').toLowerCase();
@@ -108,23 +112,46 @@ router.post('/add-product', function (req, res) {
 
                 product.save(function (err) {
                     if (err)
-                        return console.log(err);
+                     return console.log(err);
+                     var id=String(product._id);
+                     const filePath = path2.join('public/product_images/', id);
+                     // testing my stuf---------
+                     fs.mkdir(path2.dirname(filePath), { recursive: true },function(err) {
+                        if (err) {
+                          console.log(err)
+                        }
+                     });
 
-                    mkdirp('public/product_images/' + product._id, function (err) {
+                     fs.mkdir(path2.dirname(path2.join(filePath,"/gallery/thumbs/notthing")), { recursive: true },function(err) {
+                        if (err) {
+                          console.log(err)
+                        } 
+                     });
+
+                     //----------------
+
+                    /*
+                    mkdirp("public/product_images/"+product._id, function (err) {
                         return console.log(err);
                     });
 
-                    mkdirp('public/product_images/' + product._id + '/gallery', function (err) {
+                    mkdirp("public/product_images/"+id + '/gallery', function (err) {
                         return console.log(err);
                     });
-
-                    mkdirp('public/product_images/' + product._id + '/gallery/thumbs', function (err) {
-                        return console.log(err);
+                    mkdirp("public/product_images/" + id + "/gallery/thumbs", function (err) {
+                        return console.log("errreur mkdirp");
                     });
+                    */
 
                     if (imageFile != "") {
+                        console.log("you are in the if");
                         var productImage = req.files.image;
-                        var path = 'public/product_images/' + product._id + '/' + imageFile;
+                        fs.mkdir(path2.dirname(path2.join(filePath,"/"+imageFile)), { recursive: true },function(err) {
+                            if (err) {
+                              console.log(err)
+                            }
+                         });
+                        var path = 'public/product_images/' + id+ '/' + imageFile;
 
                         productImage.mv(path, function (err) {
                             return console.log(err);
@@ -192,7 +219,7 @@ router.get('/edit-product/:id', isAdmin, function (req, res) {
  */
 router.post('/edit-product/:id', function (req, res) {
 
-    var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+    var imageFile=req.files!==null?req.files.image.name:"";
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('desc', 'Description must have a value.').notEmpty();
