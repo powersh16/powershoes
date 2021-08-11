@@ -113,6 +113,7 @@ app.use(function (req, res, next) {
 });
 
 // Passport Config
+//add here
 require('./config/passport')(passport);
 // Passport Middleware
 app.use(passport.initialize());
