@@ -1,5 +1,18 @@
 <%- include("./_layouts/header") %>
 
-<%- content %>
+<div class="row products">
+    
+    <% products.forEach(function(p){ %>
+            <div class="col-xs-12 col-md-4 p">
+                <a class="pa" href="/products/<%= p.category %>/<%= p.slug %>">
+                    <img class="pimage" src="/product_images/<%= p.id %>/<%= p.image %>" alt="">
+                </a>
+                <h3><%= p.title %></h3>
+                <h4><%= parseFloat(p.price).toFixed(2) %> DA</h4>
+                <div class="mx-3 mt-3 mb-2"><button type="button"  onclick="window.location.href='/products/<%= p.category %>/<%= p.slug %>'" class="btn btn-danger btn-block"><small>View Details</small></button></div> 
+            </div>
+        
+       
+        <% }); %>
 
 <%- include("./_layouts/footer") %>

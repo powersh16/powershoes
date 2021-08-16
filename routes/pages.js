@@ -3,19 +3,20 @@ var router = express.Router();
 
 // Get Page model
 var Page = require('../models/page');
+var Product = require('../models/product');
 
 /*
  * GET /
  */
 router.get('/', function (req, res) {
     
-    Page.findOne({slug: 'home'}, function (err, page) {
+    Product.find( function (err, products) {
         if (err)
             console.log(err);
 
         res.render('index', {
-            title: page.title,
-            content: page.content
+            title: "home",
+            products: products
             
         });
     });
